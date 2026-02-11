@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulatore Telefono</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Telefono spento -->
+        <div id="phone-off" class="screen screen-off">
+            <div class="power-button" id="power-btn">
+                <div class="power-icon">⚡</div>
+            </div>
+        </div>
+
+        <!-- Schermata di boot -->
+        <div id="boot-screen" class="screen boot-screen hidden">
+            <div class="boot-content">
+                <div class="boot-logo">📱</div>
+                <h2 class="boot-title">PhoneOS</h2>
+                <p class="boot-text">Avvio sistema...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schermata di blocco -->
+        <div id="lock-screen" class="screen lock-screen hidden">
+            <div class="lock-header">
+                <div class="time">09:00</div>
+                <div class="date">Domenica 1 Gennaio</div>
+            </div>
+            <div class="lock-content">
+                <h3>Inserisci PIN</h3>
+                <div class="pin-display">
+                    <span class="pin-dot" id="pin-dot-1"></span>
+                    <span class="pin-dot" id="pin-dot-2"></span>
+                    <span class="pin-dot" id="pin-dot-3"></span>
+                    <span class="pin-dot" id="pin-dot-4"></span>
+                </div>
+                <div class="error-message hidden" id="pin-error">PIN errato</div>
+                <div class="keypad">
+                    <button class="key" data-key="1">1</button>
+                    <button class="key" data-key="2">2</button>
+                    <button class="key" data-key="3">3</button>
+                    <button class="key" data-key="4">4</button>
+                    <button class="key" data-key="5">5</button>
+                    <button class="key" data-key="6">6</button>
+                    <button class="key" data-key="7">7</button>
+                    <button class="key" data-key="8">8</button>
+                    <button class="key" data-key="9">9</button>
+                    <button class="key empty"></button>
+                    <button class="key" data-key="0">0</button>
+                    <button class="key delete" id="delete-btn">⌫</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home screen -->
+        <div id="home-screen" class="screen home-screen hidden">
+            <div class="status-bar">
+                <span class="status-time">09:01</span>
+                <span class="status-icons">📶 🔋</span>
+            </div>
+            <div class="apps-grid">
+                <div class="app-icon" data-app="messages">
+                    <div class="app-icon-img">💬</div>
+                    <div class="app-icon-label">Messaggi</div>
+                </div>
+                <div class="app-icon" data-app="phone">
+                    <div class="app-icon-img">📞</div>
+                    <div class="app-icon-label">Telefono</div>
+                </div>
+                <div class="app-icon" data-app="settings">
+                    <div class="app-icon-img">⚙️</div>
+                    <div class="app-icon-label">Impostazioni</div>
+                </div>
+                <div class="app-icon" data-app="camera">
+                    <div class="app-icon-img">📷</div>
+                    <div class="app-icon-label">Fotocamera</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Telefono - Tastierino e Contatti -->
+        <div id="phone-app" class="screen app-screen hidden">
+            <div class="app-header">
+                <button class="back-btn phone-back-btn">←</button>
+                <h2>Telefono</h2>
+            </div>
+            <div class="phone-tabs">
+                <button type="button" class="phone-tab active" data-tab="dialer">Tastierino</button>
+                <button type="button" class="phone-tab" data-tab="contacts">Contatti</button>
+            </div>
+            <!-- Tastierino -->
+            <div id="phone-dialer" class="phone-panel">
+                <div class="dial-display" id="dial-display"></div>
+                <div class="dial-keypad" id="dial-keypad">
+                    <button type="button" class="dial-key" data-dial="1">1</button>
+                    <button type="button" class="dial-key" data-dial="2">2</button>
+                    <button type="button" class="dial-key" data-dial="3">3</button>
+                    <button type="button" class="dial-key" data-dial="4">4</button>
+                    <button type="button" class="dial-key" data-dial="5">5</button>
+                    <button type="button" class="dial-key" data-dial="6">6</button>
+                    <button type="button" class="dial-key" data-dial="7">7</button>
+                    <button type="button" class="dial-key" data-dial="8">8</button>
+                    <button type="button" class="dial-key" data-dial="9">9</button>
+                    <button type="button" class="dial-key" data-dial="*">*</button>
+                    <button type="button" class="dial-key" data-dial="0">0</button>
+                    <button type="button" class="dial-key" data-dial="#">#</button>
+                </div>
+                <div class="dial-actions">
+                    <button type="button" class="dial-delete-btn" id="dial-delete-btn">⌫</button>
+                    <button type="button" class="dial-call-btn" id="dial-call-btn">Chiama</button>
+                </div>
+            </div>
+            <!-- Contatti -->
+            <div id="phone-contacts" class="phone-panel hidden">
+                <div class="contacts-list" id="contacts-list">
+                    <div class="empty-conversations" id="contacts-empty">
+                        <div class="empty-icon">👤</div>
+                        <p>Nessun contatto</p>
+                        <p class="empty-hint">Aggiungi un contatto</p>
+                    </div>
+                </div>
+                <button type="button" class="add-contact-btn" id="add-contact-btn">+ Aggiungi contatto</button>
+            </div>
+        </div>
+
+        <!-- Schermata chiamata in corso -->
+        <div id="phone-call-screen" class="screen app-screen hidden">
+            <div class="call-screen-content">
+                <div class="call-avatar" id="call-avatar">?</div>
+                <div class="call-name" id="call-name">Numero sconosciuto</div>
+                <div class="call-number" id="call-number"></div>
+                <div class="call-duration" id="call-duration">00:00</div>
+                <div class="call-status">Chiamata in corso...</div>
+                <div class="call-options">
+                    <button type="button" class="call-option-btn" id="call-speaker-btn" title="Vivavoce">
+                        <span class="call-option-icon" id="call-speaker-icon">🔊</span>
+                        <span class="call-option-label">Vivavoce</span>
+                    </button>
+                    <button type="button" class="call-option-btn" id="call-mute-btn" title="Muto">
+                        <span class="call-option-icon" id="call-mute-icon">🎤</span>
+                        <span class="call-option-label">Muto</span>
+                    </button>
+                    <button type="button" class="call-option-btn" id="call-keypad-btn" title="Tastierino">
+                        <span class="call-option-icon">🔢</span>
+                        <span class="call-option-label">Tastierino</span>
+                    </button>
+                    <button type="button" class="call-option-btn" id="call-add-contact-btn" title="Aggiungi a contatti">
+                        <span class="call-option-icon">👤+</span>
+                        <span class="call-option-label">Aggiungi</span>
+                    </button>
+                </div>
+                <div class="call-dtmf-keypad hidden" id="call-dtmf-keypad">
+                    <div class="call-dtmf-keys">
+                        <button type="button" class="call-dtmf-key" data-dtmf="1">1</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="2">2</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="3">3</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="4">4</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="5">5</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="6">6</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="7">7</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="8">8</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="9">9</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="*">*</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="0">0</button>
+                        <button type="button" class="call-dtmf-key" data-dtmf="#">#</button>
+                    </div>
+                </div>
+                <button type="button" class="call-hangup-btn" id="call-hangup-btn">Termina</button>
+            </div>
+        </div>
+
+        <!-- Form aggiungi contatto (modale inline in Contatti) -->
+        <div id="add-contact-form" class="add-contact-form hidden">
+            <div class="add-contact-form-inner">
+                <h3>Aggiungi contatto</h3>
+                <input type="text" id="new-contact-name" placeholder="Nome" class="contact-form-input">
+                <input type="text" id="new-contact-number" placeholder="Numero" class="contact-form-input">
+                <div class="add-contact-form-actions">
+                    <button type="button" class="btn-cancel" id="contact-form-cancel">Annulla</button>
+                    <button type="button" class="btn-save" id="contact-form-save">Salva</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Messaggi - Lista conversazioni -->
+        <div id="messages-list" class="screen app-screen hidden">
+            <div class="app-header">
+                <button class="back-btn" id="messages-list-back-btn" title="Esci">←</button>
+                <h2>Messaggi</h2>
+                <button class="new-conversation-btn" id="new-conversation-btn">+</button>
+            </div>
+            <div class="conversations-list" id="conversations-list">
+                <div class="empty-conversations">
+                    <div class="empty-icon">💬</div>
+                    <p>Nessuna conversazione</p>
+                    <p class="empty-hint">Tocca + per iniziare</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Messaggi - Chat -->
+        <div id="messages-app" class="screen app-screen hidden">
+            <div class="app-header">
+                <button class="back-btn" id="back-btn">←</button>
+                <div class="header-contact">
+                    <h2 id="contact-name">Nuovo messaggio</h2>
+                    <span class="contact-number" id="contact-number"></span>
+                </div>
+            </div>
+            <div class="messages-container" id="messages-container">
+                <div class="message-input-section">
+                    <div class="contact-input-wrapper" id="contact-input-wrapper">
+                        <div class="contacts-picker" id="contacts-picker">
+                            <div class="contacts-picker-label">Scegli da contatti:</div>
+                            <div class="contacts-picker-list" id="contacts-picker-list"></div>
+                        </div>
+                        <input type="text" id="contact-name-input" placeholder="Nome contatto (opzionale)" class="contact-name-input">
+                        <input type="text" id="recipient-input" placeholder="Numero destinatario" class="recipient-input">
+                    </div>
+                    <div class="chat-area" id="chat-area">
+                        <div class="welcome-message">
+                            <div class="welcome-icon">💬</div>
+                            <p>Inizia una nuova conversazione</p>
+                        </div>
+                    </div>
+                    <div class="message-input-wrapper">
+                        <input type="text" id="message-input" placeholder="Scrivi un messaggio..." class="message-input">
+                        <button class="send-btn" id="send-btn">
+                            <span class="send-icon">➤</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Impostazioni -->
+        <div id="settings-app" class="screen app-screen hidden">
+            <div class="app-header">
+                <button class="back-btn settings-back-btn">←</button>
+                <h2>Impostazioni</h2>
+            </div>
+            <div class="settings-content">
+                <section class="settings-section">
+                    <h3 class="settings-section-title">Aspetto</h3>
+                    <div class="settings-row">
+                        <span class="settings-label">Tema</span>
+                        <div class="settings-toggle-group">
+                            <button type="button" class="settings-toggle-option active" data-setting="theme" data-value="light">Chiaro</button>
+                            <button type="button" class="settings-toggle-option" data-setting="theme" data-value="dark">Scuro</button>
+                        </div>
+                    </div>
+                </section>
+                <section class="settings-section">
+                    <h3 class="settings-section-title">Suoni e vibrazioni</h3>
+                    <div class="settings-row">
+                        <span class="settings-label">Suono avvio</span>
+                        <label class="settings-switch">
+                            <input type="checkbox" id="setting-startup-sound" checked>
+                            <span class="settings-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <span class="settings-label">Vibrazione</span>
+                        <label class="settings-switch">
+                            <input type="checkbox" id="setting-vibration" checked>
+                            <span class="settings-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <span class="settings-label">Volume</span>
+                        <input type="range" id="setting-volume" min="0" max="100" value="80" class="settings-range">
+                        <span class="settings-value" id="setting-volume-value">80%</span>
+                    </div>
+                </section>
+                <section class="settings-section">
+                    <h3 class="settings-section-title">Dispositivo</h3>
+                    <div class="settings-row static">
+                        <span class="settings-label">Modello</span>
+                        <span class="settings-static">PhoneOS Simulator</span>
+                    </div>
+                    <div class="settings-row static">
+                        <span class="settings-label">Versione</span>
+                        <span class="settings-static">1.0</span>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- App Fotocamera -->
+        <div id="camera-app" class="screen app-screen hidden">
+            <div class="camera-header">
+                <button type="button" class="back-btn camera-back-btn">←</button>
+                <h2>Fotocamera</h2>
+                <div class="camera-header-right">
+                    <button type="button" class="camera-btn" id="camera-flash-btn" title="Flash">⚡</button>
+                    <button type="button" class="camera-btn" id="camera-switch-btn" title="Cambia fotocamera">🔄</button>
+                </div>
+            </div>
+            <div class="camera-viewfinder" id="camera-viewfinder">
+                <div class="camera-placeholder" id="camera-placeholder">
+                    <span class="camera-placeholder-icon">📷</span>
+                    <span>Inquadra e scatta</span>
+                </div>
+                <div class="camera-flash-overlay hidden" id="camera-flash-overlay"></div>
+            </div>
+            <div class="camera-controls">
+                <div class="camera-gallery-preview" id="camera-gallery-preview">
+                    <div class="camera-gallery-empty" id="camera-gallery-empty">Nessuna foto</div>
+                </div>
+                <button type="button" class="camera-shutter-btn" id="camera-shutter-btn"></button>
+                <div class="camera-spacer"></div>
+            </div>
+        </div>
+
+        <!-- Galleria fotocamera (lista foto scattate) -->
+        <div id="camera-gallery-screen" class="screen app-screen hidden">
+            <div class="app-header">
+                <button class="back-btn camera-gallery-back-btn">←</button>
+                <h2>Galleria</h2>
+            </div>
+            <div class="camera-gallery-content" id="camera-gallery-content">
+                <div class="camera-gallery-empty-state" id="camera-gallery-empty-state">
+                    <div class="empty-icon">🖼️</div>
+                    <p>Nessuna foto</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- App placeholder -->
+        <div id="placeholder-app" class="screen app-screen hidden">
+            <div class="app-header">
+                <button class="back-btn app-back-btn">←</button>
+                <h2 id="placeholder-title">App</h2>
+            </div>
+            <div class="placeholder-content-wrapper">
+                <div class="placeholder-content">
+                    <div class="placeholder-icon" id="placeholder-icon">📱</div>
+                    <p>Questa app non è ancora disponibile</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
